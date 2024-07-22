@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use vimium_todo_client::parser::{parse_error}; 
+    use vimium_todo_client::parser::parse_error; 
 
 
     #[test]
