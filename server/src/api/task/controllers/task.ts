@@ -22,7 +22,7 @@ export default factories.createCoreController(
 
       const tasks = await await strapi.db
         .query("api::task.task")
-        .findMany({ where: { user: user.id, isCompleted: true } });
+        .findMany({ where: { user: user.id, is_completed: true } });
       
       return tasks;
     },

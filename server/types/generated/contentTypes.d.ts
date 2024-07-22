@@ -378,7 +378,7 @@ export interface ApiTaskTask extends Schema.CollectionType {
     description: Attribute.Text &
       Attribute.Required &
       Attribute.DefaultTo<'description'>;
-    isCompleted: Attribute.Boolean & Attribute.DefaultTo<false>;
+    is_completed: Attribute.Boolean & Attribute.DefaultTo<false>;
     user: Attribute.Relation<
       'api::task.task',
       'manyToOne',
