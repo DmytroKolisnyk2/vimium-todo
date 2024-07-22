@@ -1,0 +1,43 @@
+# ChatGPT generated Rust CI Workflow
+
+name: Rust CI
+
+on:
+  push:
+    branches: [ main ] 
+  pull_request:
+    branches: [ main ] 
+
+jobs:
+  build-and-test-client:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache Cargo home
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          client/target/
+        key: ${{ runner.os }}-cargo-client-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Set up Rust nightly for 2024 edition
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: nightly
+        components: clippy, rustfmt
+        override: true
+
+    - name: Build Client
+      run: cargo +nightly build --verbose --workspace
+      working-directory: ./client
+
+    - name: Run tests on Client
+      run: cargo +nightly test --verbose --workspace
+      working-directory: ./client
