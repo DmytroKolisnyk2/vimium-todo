@@ -8,7 +8,7 @@ pub struct Task {
     pub id: u32,
     pub name: String,
     pub description: String,
-    pub is_completed: bool
+    pub is_completed: bool,
 }
 
 #[derive(Clone)]
@@ -45,16 +45,16 @@ impl TaskManager {
                 Ok(())
             } else {
                 let error_text = response.text().await.map_err(|e| e.to_string())?;
-                Err(format!("Error: {}", error_text))
+                Err(crate::parser::parse_error(&error_text))
             }
         } else {
             Err("Not authenticated".to_string())
         }
     }
 
-    pub async fn list_my_tasks(&self) -> Result<Vec<Task>, String> {
+    pub async fn list_tasks(&self, url: &str, empty_message: &str) -> Result<(), String> {
         if let Some(token) = self.auth_manager.get_token() {
-            let response = self.client.get(format!("{}/api/tasks/my", self.server_url))
+            let response = self.client.get(format!("{}/{}", self.server_url, url))
                 .bearer_auth(token)
                 .send()
                 .await
@@ -62,30 +62,17 @@ impl TaskManager {
 
             if response.status().is_success() {
                 let tasks: Vec<Task> = response.json().await.map_err(|e| e.to_string())?;
-                Ok(tasks)
+                if tasks.is_empty() {
+                    crate::console::log_info(empty_message);
+                } else {
+                    for task in tasks {
+                        crate::console::log_task(&task);
+                    }
+                }
+                Ok(())
             } else {
                 let error_text = response.text().await.map_err(|e| e.to_string())?;
-                Err(format!("Error: {}", error_text))
-            }
-        } else {
-            Err("Not authenticated".to_string())
-        }
-    }
-
-    pub async fn list_completed_tasks(&self) -> Result<Vec<Task>, String> {
-        if let Some(token) = self.auth_manager.get_token() {
-            let response = self.client.get(format!("{}/api/tasks/completed", self.server_url))
-                .bearer_auth(token)
-                .send()
-                .await
-                .map_err(|e| e.to_string())?;
-
-            if response.status().is_success() {
-                let tasks: Vec<Task> = response.json().await.map_err(|e| e.to_string())?;
-                Ok(tasks)
-            } else {
-                let error_text = response.text().await.map_err(|e| e.to_string())?;
-                Err(format!("Error: {}", error_text))
+                Err(crate::parser::parse_error(&error_text))
             }
         } else {
             Err("Not authenticated".to_string())
@@ -98,7 +85,7 @@ impl TaskManager {
                 .bearer_auth(token)
                 .json(&serde_json::json!({
                     "data": {
-                        "isCompleted": true
+                        "is_completed": true
                     }
                 }))
                 .send()
@@ -109,7 +96,7 @@ impl TaskManager {
                 Ok(())
             } else {
                 let error_text = response.text().await.map_err(|e| e.to_string())?;
-                Err(format!("Error: {}", error_text))
+                Err(crate::parser::parse_error(&error_text))
             }
         } else {
             Err("Not authenticated".to_string())
@@ -128,7 +115,7 @@ impl TaskManager {
                 Ok(())
             } else {
                 let error_text = response.text().await.map_err(|e| e.to_string())?;
-                Err(format!("Error: {}", error_text))
+                Err(crate::parser::parse_error(&error_text))
             }
         } else {
             Err("Not authenticated".to_string())

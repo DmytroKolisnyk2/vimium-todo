@@ -41,7 +41,26 @@ impl AuthenticationManager {
             Ok(token)
         } else {
             let error_text = response.text().await.map_err(|e| e.to_string())?;
-            Err(format!("Error: {}", error_text))
+            Err(crate::parser::parse_error(&error_text))
+        }
+    }
+
+    pub async fn register(&self, username: &str, email: &str, password: &str) -> Result<(), String> {
+        let response = self.client.post(format!("{}/api/auth/local/register", self.server_url))
+            .json(&serde_json::json!({
+                "username": username,
+                "email": email,
+                "password": password
+            }))
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+
+        if response.status().is_success() {
+            Ok(())
+        } else {
+            let error_text = response.text().await.map_err(|e| e.to_string())?;
+            Err(crate::parser::parse_error(&error_text))
         }
     }
 
