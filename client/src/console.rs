@@ -8,6 +8,18 @@ pub fn prompt(message: &str) -> String {
     input.trim().to_string()
 }
 
+pub fn prompt_integer(message: &str) -> u32 {
+    loop {
+        let input = prompt(message);
+        match input.parse::<u32>() {
+            Ok(num) => return num,
+            Err(_) => {
+                println!("Invalid input. Please enter a valid integer.");
+            }
+        }
+    }
+}
+
 pub fn log_info(message: &str) {
     println!(
         "\n\

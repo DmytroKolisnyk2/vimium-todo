@@ -52,7 +52,7 @@ impl TaskManager {
         }
     }
 
-    pub async fn list_tasks(&self, url: &str, empty_message: &str) -> Result<(), String> {
+    async fn list_tasks(&self, url: &str, empty_message: &str) -> Result<(), String> {
         if let Some(token) = self.auth_manager.get_token() {
             let response = self.client.get(format!("{}/{}", self.server_url, url))
                 .bearer_auth(token)
@@ -77,6 +77,14 @@ impl TaskManager {
         } else {
             Err("Not authenticated".to_string())
         }
+    }
+
+    pub async fn list_my_tasks(&self) -> Result<(), String> {
+        self.list_tasks("api/tasks/my", "No tasks found.").await
+    }
+
+    pub async fn list_completed_tasks(&self) -> Result<(), String> {
+        self.list_tasks("api/tasks/completed", "No completed tasks found.").await
     }
 
     pub async fn complete_task(&self, task_id: u32) -> Result<(), String> {
