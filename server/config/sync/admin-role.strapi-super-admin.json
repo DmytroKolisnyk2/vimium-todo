@@ -4,6 +4,62 @@
   "description": "Super Admins can access and manage all features and settings.",
   "permissions": [
     {
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::task.task",
+      "properties": {
+        "fields": [
+          "name",
+          "description",
+          "isCompleted",
+          "user"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::task.task",
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::task.task",
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::task.task",
+      "properties": {
+        "fields": [
+          "name",
+          "description",
+          "isCompleted",
+          "user"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::task.task",
+      "properties": {
+        "fields": [
+          "name",
+          "description",
+          "isCompleted",
+          "user"
+        ]
+      },
+      "conditions": []
+    },
+    {
       "action": "admin::api-tokens.access",
       "actionParameters": {},
       "subject": null,
@@ -234,7 +290,8 @@
           "confirmationToken",
           "confirmed",
           "blocked",
-          "role"
+          "role",
+          "tasks"
         ]
       },
       "conditions": []
@@ -260,7 +317,8 @@
           "confirmationToken",
           "confirmed",
           "blocked",
-          "role"
+          "role",
+          "tasks"
         ]
       },
       "conditions": []
@@ -279,7 +337,8 @@
           "confirmationToken",
           "confirmed",
           "blocked",
-          "role"
+          "role",
+          "tasks"
         ]
       },
       "conditions": []
