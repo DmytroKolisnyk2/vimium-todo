@@ -16,11 +16,15 @@ pub struct AuthenticationManager {
 }
 
 impl AuthenticationManager {
-    pub fn new() -> Self {
+    pub fn new(server_url: Option<&str>) -> Self {
+        let url = server_url
+            .map(String::from)
+            .unwrap_or_else(|| env::var("SERVER_URL").expect("SERVER_URL must be set"));
+        
         Self {
             token: Arc::new(Mutex::new(None)),
             client: Client::new(),
-            server_url: env::var("SERVER_URL").expect("SERVER_URL must be set"),
+            server_url: url,
         }
     }
 

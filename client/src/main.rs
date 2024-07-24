@@ -12,7 +12,7 @@ use dotenv::dotenv;
 async fn main() {
     dotenv().ok();
     
-    let auth_manager = AuthenticationManager::new();
+    let auth_manager = AuthenticationManager::new(None);
     let task_manager = TaskManager::new(auth_manager.clone());
 
     menu::show_menu(&auth_manager, &task_manager).await;

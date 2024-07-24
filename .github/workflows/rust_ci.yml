@@ -4,13 +4,16 @@ name: Rust CI
 
 on:
   push:
-    branches: [ main ] 
+    branches: [ main ]
   pull_request:
-    branches: [ main ] 
+    branches: [ main ]
 
 jobs:
   build-and-test-client:
     runs-on: ubuntu-latest
+
+    env:
+      SERVER_URL: ${{ secrets.SERVER_URL }} 
 
     steps:
     - uses: actions/checkout@v2
